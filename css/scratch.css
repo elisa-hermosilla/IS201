@@ -1,0 +1,96 @@
+.tableauPlaceholder {
+  width: 800px;
+  height: 600px;
+}
+
+.tableauPlaceholder object {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+body {
+  background-color: beige;
+  background-size: cover;        
+  background-repeat: no-repeat;
+  background-position: center;    
+}
+
+.font-color{
+    color: black;
+}
+
+.font-fam{
+    font-family: Arial, sans-serif;
+}
+
+.links{
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+    color: maroon;
+    font-weight: bold;
+    font-size: 20px;
+    
+}
+
+.hover-bold:hover {
+    color: #222f60;
+}
+
+.top-div {
+  width: 1360px;
+  height: 20px;
+  background-color: rgb(208, 237, 246);
+  padding: 15px;
+  margin: 10px;
+  border: 1px solid gray;
+}
+
+.hobbies-div {
+    background-color: azure;
+    height: 480px;
+    width: 680px;
+}
+
+.hobbies-container {
+    display: flex;
+    gap: 20px;         
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.hobbies-top-div{
+    background-color: azure;
+    height: 160px;
+    width: 664px;
+    padding: 8px;
+    border: 2px solid gray;
+    border-radius: 6px;
+}
+
+.family-container {
+    display: flex;
+    gap: 30px;            
+    align-items: flex-start;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+
+.family-image img {
+    max-width: 900px;      
+    width: 100%;
+    height: auto;
+    border-radius: 6px;    
+    display: block;
+}
+
+
+.family-text {
+    width: 350px;         
+    max-width: 100%;
+    background-color: azure;
+    padding: 20px;
+    border: 2px solid gray;
+    border-radius: 6px;
+    font-family: Arial, sans-serif;
+}

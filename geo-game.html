@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Where in the World? – Geography Riddle Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-color: #f7f4e5;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+
+    /* layout fix */
+    display: flex;
+    flex-direction: column;   /* nav on top, app underneath */
+    align-items: center;      /* center the app horizontally */
+    }
+
+    /* --- NAVBAR STYLES --- */
+    .nav {
+      width: 100%;
+      background: #fff9d7;
+      padding: 12px 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+
+    .nav a {
+      color: #333;
+      text-decoration: none;
+    }
+
+    .nav a:hover {
+      text-decoration: underline;
+    }
+
+    .nav span {
+      color: #999;
+    }
+
+    /* --- APP STYLES --- */
+    .app {
+      max-width: 600px;
+      width: 90%;
+      background: #ffffff;
+      margin: 40px 0;
+      padding: 24px 20px 28px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 1.7rem;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .score {
+      text-align: center;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .clue-box {
+      background-color: #e8f3ff;
+      border-left: 4px solid #3b82f6;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-bottom: 18px;
+    }
+
+    .clue-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #2563eb;
+      margin-bottom: 4px;
+    }
+
+    .clue-text {
+      font-size: 1rem;
+      color: #111827;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      margin-top: 8px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 8px 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+    }
+
+    button {
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      background-color: #3b82f6;
+      color: white;
+      transition: background-color 0.15s ease, transform 0.05s ease;
+    }
+
+    button:hover {
+      background-color: #2563eb;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    button.secondary {
+      background-color: #e5e7eb;
+      color: #111827;
+    }
+
+    button.secondary:hover {
+      background-color: #d1d5db;
+    }
+
+    .feedback {
+      min-height: 24px;
+      margin-top: 4px;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .feedback.correct {
+      color: #15803d;
+    }
+
+    .feedback.wrong {
+      color: #b91c1c;
+    }
+
+    .answer {
+      font-size: 0.9rem;
+      color: #4b5563;
+    }
+
+    .controls-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      gap: 8px;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      font-size: 0.8rem;
+      text-align: center;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🌟 NAV BAR -->
+  <nav class="nav">
+    <a href="index.html">Resume Page</a>
+    <span>|</span>
+    <a href="scratch.html">About Me</a>
+    <span>|</span>
+    <a href="#">Geography Game</a>
+  </nav>
+
+  <!-- 🌍 THE GAME APP -->
+  <div class="app">
+    <h1>Where in the World?</h1>
+    <p class="subtitle">
+      Read the clue, guess the city, and test your geography skills!
+    </p>
+
+    <div class="score">
+      Score: <span id="score">0</span> / <span id="rounds">0</span>
+    </div>
+
+    <div class="clue-box">
+      <div class="clue-label">Clue</div>
+      <div id="clue" class="clue-text">Click “New Riddle” to start.</div>
+    </div>
+
+    <div class="input-row">
+      <input type="text" id="guessInput" placeholder="Type your guess..." disabled />
+      <button id="checkBtn" disabled>Check</button>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+    <div id="answer" class="answer"></div>
+
+    <div class="controls-row">
+      <button class="secondary" id="newBtn">New Riddle</button>
+      <button class="secondary" id="giveUpBtn" disabled>Reveal & Skip</button>
+    </div>
+
+    <p class="footer-note">
+      Created by Elisa + AI 🤝
+    </p>
+  </div>
+
+  <script>
+    /* -------------- JS unchanged from previous version (riddle logic) -------------- */
+
+    const riddles = [
+      { city: "Chillan", country: "Chile", clue: "This Chilean city lies in the Biobío Region and is known for being the birthplace of heroes and for its seismic history." },
+      { city: "Vina del Mar", country: "Chile", clue: "A coastal resort city nicknamed the 'Garden City', famous for beaches and a major song festival." },
+      { city: "Montevideo", country: "Uruguay", clue: "Capital on the Río de la Plata, known for mate, coastal walks, and colonial history." },
+      { city: "Goiania", country: "Brazil", clue: "A planned city in central Brazil, filled with green areas and art déco architecture." },
+      { city: "Carlsbad", country: "United States", clue: "A coastal California city known for flower fields and a brick-themed amusement park." },
+      { city: "Salt Lake City", country: "United States", clue: "A mountain-ringed city in Utah named after a salty nearby lake." },
+      { city: "Tokyo", country: "Japan", clue: "A megacity where shrines sit next to neon skyscrapers; home to Shibuya Crossing." },
+      { city: "Brussels", country: "Belgium", clue: "Known for waffles, chocolate, Grand Place, and being the de facto capital of the EU." },
+      { city: "Madrid", country: "Spain", clue: "Spain's capital, home to Prado Museum, Retiro Park, and the famous bear statue." },
+      { city: "Seville", country: "Spain", clue: "Southern Spain city known for flamenco, orange trees, and an iconic plaza seen in Star Wars." },
+      { city: "Canary Islands", country: "Spain", clue: "Archipelago off Africa, known for black-sand beaches, volcanoes, and year-round spring weather." },
+      { city: "Antananarivo", country: "Madagascar", clue: "The hilly capital of an island nation known for lemurs and baobabs." }
+    ];
+
+    let current = null;
+    let score = 0;
+    let rounds = 0;
+
+    const clueEl = document.getElementById("clue");
+    const guessInput = document.getElementById("guessInput");
+    const feedbackEl = document.getElementById("feedback");
+    const answerEl = document.getElementById("answer");
+    const scoreEl = document.getElementById("score");
+    const roundsEl = document.getElementById("rounds");
+    const checkBtn = document.getElementById("checkBtn");
+    const newBtn = document.getElementById("newBtn");
+    const giveUpBtn = document.getElementById("giveUpBtn");
+
+    function pickRandomRiddle() {
+      return riddles[Math.floor(Math.random() * riddles.length)];
+    }
+
+    function loadNewRiddle() {
+      current = pickRandomRiddle();
+      clueEl.textContent = current.clue;
+      feedbackEl.textContent = "";
+      answerEl.textContent = "";
+      guessInput.value = "";
+      guessInput.disabled = false;
+      checkBtn.disabled = false;
+      giveUpBtn.disabled = false;
+      guessInput.focus();
+      rounds++;
+      roundsEl.textContent = rounds;
+    }
+
+    function normalize(text) {
+      return text.toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+    }
+
+    function checkAnswer() {
+      if (!current) return;
+      const guess = normalize(guessInput.value);
+      if (!guess) return;
+
+      const correct = normalize(current.city);
+      if (guess === correct) {
+        feedbackEl.textContent = "Correct! 🎉";
+        feedbackEl.className = "feedback correct";
+        score++;
+        scoreEl.textContent = score;
+        answerEl.textContent = `${current.city}, ${current.country}`;
+        guessInput.disabled = true;
+        checkBtn.disabled = true;
+        giveUpBtn.disabled = true;
+      } else {
+        feedbackEl.textContent = "Not quite—try again!";
+        feedbackEl.className = "feedback wrong";
+      }
+    }
+
+    function giveUp() {
+      feedbackEl.textContent = "Nice try! Here's the answer:";
+      feedbackEl.className = "feedback wrong";
+      answerEl.textContent = `${current.city}, ${current.country}`;
+      guessInput.disabled = true;
+      checkBtn.disabled = true;
+      giveUpBtn.disabled = true;
+    }
+
+    checkBtn.addEventListener("click", checkAnswer);
+    newBtn.addEventListener("click", loadNewRiddle);
+    giveUpBtn.addEventListener("click", giveUp);
+    guessInput.addEventListener("keydown", e => {
+      if (e.key === "Enter" && !checkBtn.disabled) checkAnswer();
+    });
+  </script>
+</body>
+</html>
